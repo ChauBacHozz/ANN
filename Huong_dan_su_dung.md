@@ -9,6 +9,7 @@ Chú ý: Tích vào 2 ô Install launcher for all users và Add Python to PATH, 
 - Bước 3: sau khi cài đặt VS Code, mở ứng dụng và vào file -> chọn open folder -> Tại một folder mới tại nơi muốn lưu code rời ấn Open
 - Bước 4: ở màn hình VS Code, vào phần extenson (Ctrl + Shift + X) gõ "python" (nếu không hiển thị chữ install ở dưới tức là đã được cài đặt, nếu không hãy bấm vào install), sau đó gõ "jupyter" và cài đặt lựa chọn xuất hiện đầu tiên
 ![image](https://user-images.githubusercontent.com/90232557/226867539-d31397b4-444e-4148-82f1-089b563cc1c6.png)
+- Bước 5: trong phần tìm kiếm của extension gõ "Code runner" và cài đặt lựa chọn xuất hiện đầu tiên
 
 ## Tạo file thực thi và cài đặt các thư viện cần thiết
 - Bước 1: Ấn Ctrl + Shift + E để mở phần Explorer của VS Code, tạo file python để chạy code bằng cách gõ {Tên file}.py, ví dụ: main.py sau đó ấn Enter (Tất cả code python sẽ nằm trong file này)
@@ -19,10 +20,21 @@ Chú ý: Tích vào 2 ô Install launcher for all users và Add Python to PATH, 
 ![image](https://user-images.githubusercontent.com/90232557/226871446-f4abf4ce-4937-42ce-89ff-912600c33db6.png)
 
 ## Sử dụng ANN bằng python
-### Import các thư viện cần thiết: numpy, matplotlib, pandas
+### Giới thiệu các thư viện: numpy, matplotlib, pandas
 - numpy: thư việc đại số tuyến tính của python (xử lý nhân ma trận, nghịch đảo ma trận, vv...) dể xử lý số liệu
 - matplotlib: thư viện hiển thị dữ liệu (giống như Chart của excel)
 - pandas: thư viện dùng để đọc dataset từ các file dạng csv, xlsx, text,...
+### Bước 1: Import thư viện vào file code
+- Ở đầu file python, nhập vào các dòng sau:
+```
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from ANN_pkg import *
+```
+- Từ **as** có nghĩa là ta định nghĩa tên gọi tắt cho thư viện, nhằm giúp cho việc code không bị dài dòng và thuận tiện cho việc gọi các hàm từ thư viện
+- import * có nghĩa là ta import tất cả các hàm cần sử dụng từ gói ANN
+### Bước 2: 
 
 
 
