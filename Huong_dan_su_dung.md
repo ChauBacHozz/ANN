@@ -64,7 +64,7 @@ from ANN_pkg import *
  
  *Dữ liệu sau khi xáo trộn lẫn nhau*
  
- - Tách ma trận dữ liệu thành các cột X và Y, chia thành tập dữ liệu train và test: Ở đây bài toán chính là sử dụng mô hình máy học để sự đoán nồng độ các chất trong hỗn hợp sản phẩm (thuốc) vậy nên mình sẽ coi dữ liệu đầu vào (X) là tín hiệu Abs, còn dữ liệu đích (Y) chính là nồng độ các chất. Chia tập dữ liệu thành tập dữ liệu luyện (train) à tập dữ liệu kiểm tra (test), Sử dụng câu lệnh sau
+ - Tách ma trận dữ liệu thành các cột X và Y, chia thành tập dữ liệu train và test: Ở đây bài toán chính là sử dụng mô hình máy học để sự đoán nồng độ các chất trong hỗn hợp sản phẩm (thuốc) vậy nên mình sẽ coi dữ liệu đầu vào (X) là tín hiệu Abs, còn dữ liệu đích (Y) chính là nồng độ các chất. Chia tập dữ liệu thành tập dữ liệu luyện (train) và tập dữ liệu kiểm tra (test), sử dụng câu lệnh sau:
 ```
 X_train, X_test, y_train, y_test = train_test_split(data.iloc[:,3:], data.iloc[:,0:3],test_size=0.2, random_state=42)
 ```
@@ -75,7 +75,23 @@ X_train, X_test, y_train, y_test = train_test_split(data.iloc[:,3:], data.iloc[:
  
  
  ### Bước 3: Sử dụng mạng ANN để học tập dữ liệu
- - Sau dữ liệu đã được tiền xử lý, chuyển đổi dữ liệu từ dạng Dataframe
+ - Sau dữ liệu đã được tiền xử lý, chuyển đổi dữ liệu từ dạng Dataframe sang dạn ma trận số và chuyển vị ma trận để truyền vào model:
+ ```
+X_train = X_train.values.T
+y_train = y_train.values.T
+X_test = X_test.values.T
+y_test = y_test.values.T
+ ```
+![image](https://user-images.githubusercontent.com/90232557/227165912-ad85a66a-0e64-4606-98d7-5e5c63f2a925.png)
+ *Sau khi chuyển đổi, ma trận sẽ có dấu ngoặc vuông ở ngoài*
+ - Tạo ra biến có tên là model bằng lệnh Neural_Network():
+ ```
+ model = Neural_Network([X.shape[0], 100, 100, Y.shape[0]], ReLU)
+ ```
+ - Cho model luyện với lệnh fit():
+ ```
+ model.fit(X_train, y_train, learning_rate=0.001, epochs=1000, lr_down=True, lr_decay=20)
+ ```
 
 
 
