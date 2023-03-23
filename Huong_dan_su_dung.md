@@ -30,17 +30,19 @@ Chú ý: Tích vào 2 ô Install launcher for all users và Add Python to PATH, 
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from sklearn.model_selection import train_test_split
 from ANN_pkg import *
 ```
 - Từ **as** có nghĩa là ta định nghĩa tên gọi tắt cho thư viện, nhằm giúp cho việc code không bị dài dòng và thuận tiện cho việc gọi các hàm từ thư viện
 - import * có nghĩa là ta import tất cả các hàm cần sử dụng từ gói ANN
+
 ### Bước 2: Sử dụng python để đọc file dữ liệu và tiến hành tiền xử lý dữ liệu
 ##### Đọc file dữ liệu
 - Copy file dữ liệu (dạng csv, xlsx, txt, ...) vào cùng thư mục với file python
-![image](https://user-images.githubusercontent.com/90232557/227142630-d6602b79-34e7-4b98-be1b-46ead31ac61b.png)
+![image](https://user-images.githubusercontent.com/90232557/227155077-a78b36c9-bde0-42ec-bbfa-ee7c52f41242.png)
 - Sau đó trong file .py, tạo một biến đặt tên là data (data sẽ lưu trữ thông tin của file dữ liệu) và đọc bảng dữ liệu bằng lệnh pd.read_excel({Tên file})
 - Xuống dòng gõ lệnh print(data) rồi chuột phải, chọn "Run Code" để kiểm tra python đã đọc được dữ liệu hay chưa
-![image](https://user-images.githubusercontent.com/90232557/227144059-26e81450-f8d0-4bde-bd2f-7b0002ef8f55.png)
+![image](https://user-images.githubusercontent.com/90232557/227155601-ab8cd4fe-be3c-4b22-b419-3942458f05e9.png)
   *Nếu dữ liệu được đọc thành công, sau khi run code bảng dữ liệu sẽ hiển thị ở trong cửa sổ terminal như hình*
 ##### Tiền xử lý dữ liệu
 - Kiểm tra dữ liệu trống: Kiểm tra file dữ liệu có ô nào bị bỏ trống không bằng lệnh print(data.isnull().values.any()) sau đó run code, nếu cửa sổ terminal hiện lên là False tức là không có ô nào trong bảng dữ liệu bị trống, còn nếu hiện lên là True thì cần rà soát kiểm tra lại file dữ liệu, nếu không khi luyện mạng sẽ gây lỗi
@@ -52,9 +54,28 @@ from ANN_pkg import *
  data.iloc[:,0:3] = data.iloc[:,0:3] / 100
  data.iloc[:,3:] = data.iloc[:,3:] / 10
  ```
- ![image](https://user-images.githubusercontent.com/90232557/227149483-e90ff08a-c39d-4719-b020-039e8a742b0d.png)
-
-
+![image](https://user-images.githubusercontent.com/90232557/227156238-f96cd975-fab2-48fb-ba9e-9b23bd211936.png)
+ *Sau khi co giãn, ta thấy rằng các giá trị trong bảng dữ liệu đều nằm trong khoảng 0 - 1*
+ - Trộn dữ liệu: để mạng ANN học được hết các đặc trưng của tập dữ liệu, trong khoảng thời gian học nó cần phải nhìn thấy các được các dữ liệu khác nhau. Nếu mạng neural được học tập dữ liệu quá giống nhau (Ví dụ: Các phổ trông giống nhau, không có sự khac biệt quá nhiều) sẽ hình thành thiên kiến và sẽ không hoạt động tốt với những dữ liệu nó chưa nhìn thấy bao giờ (overfit). Vì vậy, cần phải thực hiện xáo trộn dữ liệu bằng câu lệnh
+ ```
+ data = data.sample(frac=1)
+ ```
+![image](https://user-images.githubusercontent.com/90232557/227151917-499575a0-c2c3-4c6a-a7a1-b78fb792bc39.png)
+ 
+ *Dữ liệu sau khi xáo trộn lẫn nhau*
+ 
+ - Tách ma trận dữ liệu thành các cột X và Y, chia thành tập dữ liệu train và test: Ở đây bài toán chính là sử dụng mô hình máy học để sự đoán nồng độ các chất trong hỗn hợp sản phẩm (thuốc) vậy nên mình sẽ coi dữ liệu đầu vào (X) là tín hiệu Abs, còn dữ liệu đích (Y) chính là nồng độ các chất. Chia tập dữ liệu thành tập dữ liệu luyện (train) à tập dữ liệu kiểm tra (test), Sử dụng câu lệnh sau
+```
+X_train, X_test, y_train, y_test = train_test_split(data.iloc[:,3:], data.iloc[:,0:3],test_size=0.2, random_state=42)
+```
++ X_train: các cột Abs của tập dữ liệu train
++ y_train: các cột nồng độ của tập dữ liệu train
++ X_test: các cột Abs của tập dữ liệu test
++ y_test: các cột nồng độ của tập dữ liệu test
+ 
+ 
+ ### Bước 3: Sử dụng mạng ANN để học tập dữ liệu
+ - Sau dữ liệu đã được tiền xử lý, chuyển đổi dữ liệu từ dạng Dataframe
 
 
 
