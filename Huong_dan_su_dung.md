@@ -85,7 +85,7 @@ X_train, X_test, y_train, y_test = train_test_split(data[:,3:], data[:,0:3],test
 + y_test: các cột nồng độ của tập dữ liệu test
  
  
- ### Bước 3: Sử dụng mạng ANN để học tập dữ liệu
+ ### Bước 3: Sử dụng mạng ANN để học tập dữ liệu với Batch gradient descent
  - Sau dữ liệu đã được tiền xử lý, chuyển đổi dữ liệu từ dạng Dataframe sang dạn ma trận số và chuyển vị ma trận để truyền vào model:
  ```
 X_train = X_train.values.T
@@ -115,6 +115,11 @@ y_test = y_test.values.T
  Thông thường chúng ta trông đợi cost của model đi xuống dần và di chuyển đến nhỏ nhất (min) nào đó, nếu đồ thị không đi xuống dễ dàng hoặc đi ngược lên trên, cần tủy chỉnh lại hệ số học máy đã nói ở trên.
  ![image](https://user-images.githubusercontent.com/90232557/227220797-57e0f4be-53fc-4a42-9ad3-dabc92eb339d.png)
  *Như trường hợp này thì có vẻ như model đã học được tập dữ liệu qua 10000 lần, tuy nhiên phải chuyển lr_down thành True để tối ưu việc tìm đến điểm min, đồng thời ở của sổ terminal hiển thị ra giá trị min và model đạt được, min càng nhỏ so với tập dữ liệu thì khả năng học của model càng tốt.*
+ - Sau đó có thể in ra sự đoán của model với tập dữ liệu test (X_test) bằng lệnh:
+ ```
+ print(model.forward(X_test).T)
+ ```
+ - Giải thích Batch gradient descent: sử dụng toàn bộ tập dữ liệu train để luyện cho model (Batch) và dùng thuật toán tối ưu gradient descent (có ở trong gói ANN). Điều này khiến cho việc luyện mạng trở nên dễ dàng do model nhìn thấy được toàn bộ tập dữ liệu train, khiến cho cost giảm xuống khá đều trong đồ thị. Tuy nhiên đây cũng là nhược điểm, bởi toàn bộ thời gian thì model chỉ nhìn thấy được dữ liệu train, còn với dữ liệu test nếu có sự khác nhau lớn thì sẽ hoạt động và phán đoán không tốt, điều này gây nên hiện tượng overfit. Để khắc phục cần tăng số lượng dữ liệu (dataset), nhiều mẫu hơn giúp cho model nhìn thấy nhiều dữ liệu hơn, hoặc đổi sang thuật toán tối ưu khác như Mini batch gradient descent
  
  
  
