@@ -56,6 +56,13 @@ from ANN_pkg import *
  ```
 ![image](https://user-images.githubusercontent.com/90232557/227156238-f96cd975-fab2-48fb-ba9e-9b23bd211936.png)
  *Sau khi co giãn, ta thấy rằng các giá trị trong bảng dữ liệu đều nằm trong khoảng 0 - 1*
+ - Chính quy hóa dữ liệu: với dữ liệu dạng nhiều chiều (nhiều cột) thì việc chính quy hóa giúp cho giá trị của mỗi đặc trưng có trung bình bằng 0 và phương sai bằng 1. Từ đó giúp model dễ dàng tiến được tới giá trị min của hàm loss, đồng thời khiến cho tốc độ học máy tăng lên. Để chính quy hóa dữ liệu ta thêm vào các dòng lệnh sau:
+ ```
+from sklearn import preprocessing as pp
+std = pp.StandardScaler()
+data = std.fit_transform(data)
+ ```
+ 
  - Trộn dữ liệu: để mạng ANN học được hết các đặc trưng của tập dữ liệu, trong khoảng thời gian học nó cần phải nhìn thấy các được các dữ liệu khác nhau. Nếu mạng neural được học tập dữ liệu quá giống nhau (Ví dụ: Các phổ trông giống nhau, không có sự khac biệt quá nhiều) sẽ hình thành thiên kiến và sẽ không hoạt động tốt với những dữ liệu nó chưa nhìn thấy bao giờ (overfit). Vì vậy, cần phải thực hiện xáo trộn dữ liệu bằng câu lệnh
  ```
  data = data.sample(frac=1)
@@ -63,10 +70,14 @@ from ANN_pkg import *
 ![image](https://user-images.githubusercontent.com/90232557/227151917-499575a0-c2c3-4c6a-a7a1-b78fb792bc39.png)
  
  *Dữ liệu sau khi xáo trộn lẫn nhau*
+ #### Lưu ý: Các kỹ thuật tiền xử lý dữ liệu như chuẩn hóa, co giãn, chính quy hóa dữ liệu được sử dụng tùy trong từng trường hợp cụ thể. Với những dữ liệu đặc trưng sẽ phải thử để chọn ra những kỹ thuật sao cho việc học máy được diễn ra một cách tối ưu nhất.
  
  - Tách ma trận dữ liệu thành các cột X và Y, chia thành tập dữ liệu train và test: Ở đây bài toán chính là sử dụng mô hình máy học để sự đoán nồng độ các chất trong hỗn hợp sản phẩm (thuốc) vậy nên mình sẽ coi dữ liệu đầu vào (X) là tín hiệu Abs, còn dữ liệu đích (Y) chính là nồng độ các chất. Chia tập dữ liệu thành tập dữ liệu luyện (train) và tập dữ liệu kiểm tra (test), sử dụng câu lệnh sau:
 ```
+# Nếu trước đó không chuẩn hóa hoặc chính quy hóa dữ liệu
 X_train, X_test, y_train, y_test = train_test_split(data.iloc[:,3:], data.iloc[:,0:3],test_size=0.2, random_state=42)
+# Nếu trước đó đã chuẩn hóa hoặc chính quy hóa dữ liệu
+X_train, X_test, y_train, y_test = train_test_split(data[:,3:], data[:,0:3],test_size=0.2, random_state=42)
 ```
 + X_train: các cột Abs của tập dữ liệu train
 + y_train: các cột nồng độ của tập dữ liệu train
@@ -86,13 +97,29 @@ y_test = y_test.values.T
  *Sau khi chuyển đổi, ma trận sẽ có dấu ngoặc vuông ở ngoài*
  - Tạo ra biến có tên là model bằng lệnh Neural_Network():
  ```
- model = Neural_Network([X.shape[0], 100, 100, Y.shape[0]], ReLU)
+ model = Neural_Network([X.shape[0], 300, 300, 300, Y.shape[0]], ReLU)
  ```
  - Cho model luyện với lệnh fit():
  ```
- model.fit(X_train, y_train, learning_rate=0.001, epochs=1000, lr_down=True, lr_decay=20)
+ model.fit(X_train, y_train, learning_rate=0.001, epochs=1000, lr_down=False, lr_decay=20)
  ```
+ + Chỉ cho mạng luyện tập với tập dữ liệu train (X_train, y_train) 
+ + learning_rate là hệ số học máy, thường sẽ dao động từ khoảng 10E-8 đến 0.1, hệ số học máy phải điều chỉnh thủ công và tùy từng trường hợp dữ liệu thì giá trị của hệ số học máy sẽ khác nhau
+ + epochs là số lần học máy, với dữ liệu nhiều chiều và nhiều mẫu thì cần hệ số học máy lớn để model có thể nhận dạng và học hỏi được dữ liệu
+ + lr_down, lr_decay là khái niệm tối ưu hệ số học máy trông trường hợp model khó học được tập dữ liệu (hiện tại chưa cần quan tâm)
+ - Sau khi đợi model luyện xong, ta có thể xem được quá trình học máy của model có thuận lợi hay không bằng cách kiểm tra sự sai khác giữa giá trị thực và giá trị tính toán (cost) của model bằng câu lệnh:
+ ```
+ print(np.min(model.cost_his))
+ plt.plot(model.cost_his)
+ ```
+ Thông thường chúng ta trông đợi cost của model đi xuống dần và di chuyển đến nhỏ nhất (min) nào đó, nếu đồ thị không đi xuống dễ dàng hoặc đi ngược lên trên, cần tủy chỉnh lại hệ số học máy đã nói ở trên.
+ ![image](https://user-images.githubusercontent.com/90232557/227220797-57e0f4be-53fc-4a42-9ad3-dabc92eb339d.png)
+ *Như trường hợp này thì có vẻ như model đã học được tập dữ liệu qua 10000 lần, tuy nhiên phải chuyển lr_down thành True để tối ưu việc tìm đến điểm min, đồng thời ở của sổ terminal hiển thị ra giá trị min và model đạt được, min càng nhỏ so với tập dữ liệu thì khả năng học của model càng tốt.*
+ 
+ 
+ 
 
+ 
 
 
 
