@@ -1,6 +1,6 @@
 # ANN
 
-# Hướng dẫn sử dụng gói ann để chạy model mạng nơ ron nhân tạo cơ bản (ANN)
+# Hướng dẫn sử dụng gói ANN để chạy model mạng nơ ron nhân tạo cơ bản (ANN)
 
 ## Cài đặt python và các ứng dụng cần thiết
 - Bước 1: Tải python từ trang: https://www.python.org/downloads/
@@ -119,17 +119,6 @@ y_test = y_test.values.T
  ```
  print(model.forward(X_test).T)
  ```
- - Giải thích Batch gradient descent: sử dụng toàn bộ tập dữ liệu train để luyện cho model (Batch) và dùng thuật toán tối ưu gradient descent (có ở trong gói ANN). Điều này khiến cho việc luyện mạng trở nên dễ dàng do model nhìn thấy được toàn bộ tập dữ liệu train, khiến cho cost giảm xuống khá đều trong đồ thị. Tuy nhiên đây cũng là nhược điểm, bởi toàn bộ thời gian thì model chỉ nhìn thấy được dữ liệu train, còn với dữ liệu test nếu có sự khác nhau lớn thì sẽ hoạt động và phán đoán không tốt, điều này gây nên hiện tượng overfit. Để khắc phục cần tăng số lượng dữ liệu (dataset), nhiều mẫu hơn giúp cho model nhìn thấy nhiều dữ liệu hơn, hoặc đổi sang thuật toán tối ưu khác như Mini batch gradient descent
+ - Giải thích Batch gradient descent: sử dụng toàn bộ tập dữ liệu train để luyện cho model (Batch) và dùng thuật toán tối ưu gradient descent (có ở trong gói ANN). Điều này khiến cho việc luyện mạng trở nên dễ dàng do model nhìn thấy được toàn bộ tập dữ liệu train, khiến cho cost giảm xuống khá đều trong đồ thị. Tuy nhiên đây cũng là nhược điểm, bởi toàn bộ thời gian thì model chỉ nhìn thấy được dữ liệu train, còn với dữ liệu test nếu có sự khác nhau lớn thì sẽ hoạt động và phán đoán không tốt, điều này gây nên hiện tượng overfit. Để khắc phục cần tăng số lượng dữ liệu (dataset), nhiều mẫu hơn giúp cho model nhìn thấy nhiều dữ liệu hơn, hoặc đổi sang thuật toán tối ưu khác như Mini batch gradient descent.
  
- 
- 
-
- 
-
-
-
-
-
-
-
 
