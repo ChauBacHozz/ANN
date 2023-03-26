@@ -24,6 +24,7 @@ Chú ý: Tích vào 2 ô Install launcher for all users và Add Python to PATH, 
 - numpy: thư việc đại số tuyến tính của python (xử lý nhân ma trận, nghịch đảo ma trận, vv...) dể xử lý số liệu
 - matplotlib: thư viện hiển thị dữ liệu (giống như Chart của excel)
 - pandas: thư viện dùng để đọc dataset từ các file dạng csv, xlsx, text,...
+- scikit-learn: thư viện học máy dùng cho đa mục đích
 ### Bước 1: Import thư viện vào file code
 - Ở đầu file python, nhập vào các dòng sau:
 ```
