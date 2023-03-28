@@ -98,7 +98,7 @@ y_test = y_test.values.T
  *Sau khi chuyển đổi, ma trận sẽ có dấu ngoặc vuông ở ngoài*
  - Tạo ra biến có tên là model bằng lệnh Neural_Network():
  ```
- model = Neural_Network([X.shape[0], 300, 300, 300, Y.shape[0]], ReLU)
+ model = Neural_Network([X_train.shape[0], 30, 30, 30, y_train.shape[0]], ReLU)
  ```
  - Cho model luyện với lệnh fit():
  ```
