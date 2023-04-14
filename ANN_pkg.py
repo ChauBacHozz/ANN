@@ -1,5 +1,5 @@
 import numpy as np
-
+import pickle
 def ReLU(input):
     return np.maximum(input, 0)
 def leaky_ReLU(input):
@@ -46,7 +46,8 @@ class Layer:
         self.isoutputlayer = isoutputlayer
         self.left_layer_output = None
         self.weight = 0.01 * np.random.randn(col, row)
-        self.bias = np.zeros([col, 1])
+        # self.weight = np.random.randn(col,row) * np.sqrt(2/row)
+        self.bias = np.zeros((col, 1))
         self.dW = None
         self.db = None
         self.activationForward = act_func
@@ -73,31 +74,42 @@ class Layer:
         self.bias -= learning_rate * self.db 
 
 class Neural_Network:
-    def __init__(self, n_nodes_list, hiddenlayers_actfunc):
+    def __init__(self, n_nodes_list, hiddenlayers_actfunc, saved_weight = None, saved_bias = None):
         self.pred_his = []
         self.layers = []
         for i in range (len(n_nodes_list) - 1):
             self.layers.append(Layer(row = n_nodes_list[i], col=n_nodes_list[i + 1], act_func=hiddenlayers_actfunc))
+        if (saved_weight != None) and (saved_bias != None):
+            for i in range (len(n_nodes_list) - 1):
+                self.layers[i].weight = saved_weight[i]
+                self.layers[i].bias = saved_bias[i]
         self.layers[-1].activationForward = Linear
         self.layers[-1].activationBackward = Linear_de
         self.cost_his = []
+        self.test_cost_his = []
+    def weight2_sum(self):
+        sum = 0
+        for layer in self.layers:
+            sum += np.sum(np.square(layer.bias))
+        return sum
     def forward(self, input):
         x = np.copy(input)
         for layer in self.layers:
             x = layer.forward(x)
         return x
-    def backward(self, target, predict):
-        delta = MSEGrad(target, predict)
+    def backward(self, target, predict, alpha):
+        delta = MSEGrad(target, predict) + alpha * self.weight2_sum();
         for layer in reversed(self.layers):
             d_input = delta * layer.activationBackward(layer.input)
             delta = layer.backward(d_input)
     def update(self, learning_rate = 0.01):
         for layer in self.layers:
             layer.update(learning_rate)
-    def fit(self, input_matrix, target, learning_rate, epochs, lr_down = True, lr_decay = 10):
+    def fit(self, input_matrix, target, X_test, y_test, learning_rate = 0.001, alpha = 0.00001, epochs = 1000 ,lr_down = True, lr_decay = 50):
+        fit_range = [1,2,3,4,5,6,7,8,9,10]
         for i in range (epochs):
             predict = self.forward(input_matrix)
-            self.backward(target, predict)
+            self.backward(target, predict, alpha)
             self.update(learning_rate= learning_rate)
             if lr_down:
                 if i % 1000 == 0:
@@ -105,3 +117,15 @@ class Neural_Network:
             if (i + 1) % 100 == 0:
                 self.pred_his.append(predict)
                 self.cost_his.append(MSE(predict, target)) 
+                self.test_cost_his.append(MSE(self.forward(X_test), y_test))
+            if (i + 1) * 10 / (epochs) in fit_range:
+                print(f"Loading {(i + 1) * 100 / (epochs)}%")
+        print("Learning process completed!!!")
+    def save_model(self):
+        w_list = []
+        b_list = []
+        for layer in self.layers:
+            w_list.append(layer.weight)
+            b_list.append(layer.bias)
+        pickle.dump(w_list , open('weights.pkl' , 'wb' ) )
+        pickle.dump(b_list , open('bias.pkl' , 'wb' ) )
